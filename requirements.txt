@@ -1,0 +1,4 @@
+python-whois
+discord.py
+python-dotenv
+Flask
