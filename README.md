@@ -45,7 +45,7 @@ source .venv/bin/activate  # macOS/Linux
 
 3. **Zainstaluj zależności:**
 ```bash
-pip install flask flask-crontab python-whois python-dotenv
+pip install -r requirements.txt
 ```
 
 4. **Skonfiguruj zmienne środowiskowe:**
