@@ -1,42 +1,29 @@
-import whois
+# Importing necessary libraries
 from flask import Flask
+from flask_crontab import Crontab
+from checker import checkDomains
 
-import whois
+# Importing necessary modules
+from notifier import sendEmail
+from checker import expirationDate
 
-def whoWeb():
-    try:
-        with open('pages.txt', 'r') as file:
-            pages = [page.strip() for page in file.readlines() if page.strip()]
-        
-        results = []
-        for page in pages:
-            try:
-                pageInfo = whois.whois(page)
-                results.append({
-                    'domain': page,
-                    'expiration_date': pageInfo.expiration_date
-                })
-            except Exception as e:
-                results.append({
-                    'domain': page,
-                    'error': str(e)
-                })
-        
-        return results  # Zwraca wszystkie wyniki
-        
-    except FileNotFoundError:
-        return "Błąd: Plik 'pages.txt' nie został znaleziony"
-    except Exception as e:
-        return f"Błąd: {str(e)}"
-
-    
-def test(url):
-    info = whois.whois(url)
-
-    return f"{url}: {info.expiration_date}"
-
+# Initializing Flask app and Crontab
 app = Flask(__name__)
+crontab = Crontab(app)
 
-@app.route("/")
-def showWhois():
-    return whoWeb()
+@app.route('/')
+def index():
+    checkDomains()
+    return "Domena sprawdzona!"
+
+# Cron job - sprawdzanie domen codziennie o 9:00
+@crontab.job(minute='0', hour='9')
+def daily_domain_check():
+    checkDomains()
+    return "Domeny sprawdzone codziennie o 9:00!"
+
+# Cron job - test co minutę (usuń w produkcji)
+@crontab.job(minute='*')  # Co 5 minut
+def test_cron():
+    checkDomains()
+    return "Test cron job executed!"
