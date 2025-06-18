@@ -3,10 +3,6 @@ from flask import Flask
 from flask_crontab import Crontab
 from checker import checkDomains
 
-# Importing necessary modules
-from notifier import sendEmail
-from checker import expirationDate
-
 # Initializing Flask app and Crontab
 app = Flask(__name__)
 crontab = Crontab(app)
@@ -23,7 +19,7 @@ def daily_domain_check():
     return "Domeny sprawdzone codziennie o 9:00!"
 
 # Cron job - test co minutę (usuń w produkcji)
-@crontab.job(minute='*')  # Co 5 minut
+@crontab.job(minute='*')  # Co minutę
 def test_cron():
     checkDomains()
     return "Test cron job executed!"

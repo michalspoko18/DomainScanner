@@ -1,6 +1,6 @@
 import whois
 from datetime import datetime, timedelta
-from notifier import sendEmail
+from notifier import sendEmail, sendDiscordMessage
 
 def getPolishMonthName(month_number):
     """Zwraca polską nazwę miesiąca na podstawie numeru (1-12)"""
@@ -61,7 +61,9 @@ def checkDomains():
     if message:
         current_month = getPolishMonthName(datetime.now().month)
         subject = f"Domeny wygasające w ciągu miesiąca ({current_month} {datetime.now().year}) "
-        sendEmail(subject, "\n".join(message))
+        # sendEmail(subject, "\n".join(message))
+        sendDiscordMessage(f"{subject}\n" + "\n".join(message))
+
 
 def expirationDate(url):
     try:
